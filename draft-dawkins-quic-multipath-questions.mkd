@@ -183,7 +183,7 @@ This question seems to revolve around two sub-questions:
 
 - Whether we can identify use cases with enough in common with each other to reuse a single scheduler, whether or not there are other use cases that need different schedulers.
 
-From a code reuse perspective, we note that multipath is complicated enough to get right that depending on applications to get multipath right isn't desireable, although it's unavoidable.  One reason QUIC was originally chartered to do multipath was because we noticed that both TCP {{RFC0793}} and SCTP {{RFC4960}} were retrofitted with support for some aspects of multipath operation ({{RFC8684}} added multipath support for TCP, and {{RFC5061}} added fast failover to another path for SCTP).
+From a code reuse perspective, we note that multipath is complicated enough to get right that depending on applications to get multipath right isn't desirable, although it's unavoidable.  One reason QUIC was originally chartered to do multipath was because we noticed that both TCP {{RFC0793}} and SCTP {{RFC4960}} were retrofitted with support for some aspects of multipath operation ({{RFC8684}} added multipath support for TCP, and {{RFC5061}} added fast failover to another path for SCTP).
 
 - Whether we think there are enough use cases that don't rely on application-specific awareness to make scheduling decisions.
 
@@ -211,7 +211,7 @@ Suggested answer for Q-Symmetric: "Need a clearer understanding of the applicati
 
 ## Q-Reorder What are the Expectations about Reordering? {#Q-Reorder}
 
-We've had at least two starting ppints for people in these discussions - one that expects traffic to be delivered in-order to applications, and one that expects applications to handle their own out-of-order delivery, since the sending application needs to track what's actually being delivered, including being delivered significantly out of order, in order to select a path more effectively.
+We've had at least two starting points for people in these discussions - one that expects traffic to be delivered in-order to applications, and one that expects applications to handle their own out-of-order delivery, since the sending application needs to track what's actually being delivered, including being delivered significantly out of order, in order to select a path more effectively.
 
 For latency-sensitive applications, it's likely that out-of-order delivery across paths is something the application would want to be aware of.  And it's worth noting that we're chatting about the desirability of reliable streams, versus partially reliable streams, versus datagrams, in at least a couple of use cases, and partial reliability isn't part of streams in {{I-D.ietf-quic-transport}}, so if we think partially reliable streams are the right answer, there's still some specification work to do.
 
@@ -221,7 +221,7 @@ Suggested answer for Q-Reorder: "Answer unclear".
 
 ## Q-CB How Will We Measure the Benefits and Costs of Multipath? {#Q-CB}
 
-This has come up most often in private conversations, but I've heard concerns about our ability to measure whether we are making the best use of multiple paths at scale, in a reproduceable way.
+This has come up most often in private conversations, but I've heard concerns about our ability to measure whether we are making the best use of multiple paths at scale, in a reproducible way.
 
 It seems obvious that this question is important, and while it may be early in the process to expect a detailed answer, this question is recorded in this document so that we don't lose track of it.
 
@@ -233,7 +233,7 @@ At least one point of view is that different use cases have different goals.  So
 
 - to migrate from one path to another, possibly because a path has stopped working, or because a "better" path becomes available.
 
-- using all available bandwidth betwen two endpoints, across multiple paths.
+- using all available bandwidth between two endpoints, across multiple paths.
 
 - minimizing latency for the best possible user experience, especially for page loads on the Web.
 
