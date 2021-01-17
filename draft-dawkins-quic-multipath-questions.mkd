@@ -23,22 +23,17 @@ author:
   email: spencerdawkins.ietf@gmail.com
 
 informative:
-  TS23501:
-    author:
-      - ins: 3GPP (3rd Generation Partnership Project)
-    title: Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 16)
-    date: 2019
-    target: https://www.3gpp.org/ftp/Specs/archive/23_series/23.501/
 
   I-D.ietf-quic-transport:
   I-D.ietf-quic-datagram:
+  I-D.ietf-quic-http:
   I-D.deconinck-quic-multipath:
   I-D.an-multipath-quic:
   I-D.an-multipath-quic-application-policy:
+  I-D.liu-multipath-quic:
   I-D.huitema-quic-mpath-option:
   I-D.bonaventure-iccrg-schedulers:
   I-D.amend-iccrg-multipath-reordering:
-  I-D.bonaventure-quic-atsss-overview:
   I-D.dawkins-quic-what-to-do-with-multipath:
 
   RFC0793:
@@ -60,48 +55,19 @@ informative:
   QUIC-interim-20-10-minutes:
     title: IETF QUIC Working Group Virtual Interim Meeting - October 2020 - Minutes
     target: https://github.com/quicwg/wg-materials/tree/master/interim-20-10
-  
-  MASQUE-charter:
-    title: IETF MASQUE Working Group Charter
-    target: https://datatracker.ietf.org/wg/masque/about/
 
-    date: October 2020
   Chromium-Multipath:
     title: Multipath in Chromium
     author:
       - ins: Fan Yang/Jana Iyengar
     target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/Multipath%20in%20Chromium.pdf
     date: October 2020
-  Apple-Multipath:
-    title: Multipath transports at Apple
-    author:
-      - ins: Christoph Paasch
-    target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/Multipath%20transports%20at%20Apple.pdf
-    date: October 2020
-  Alibaba-MPQUIC:
-    title: MPQIIC Use Cases
-    author:
-      - ins: Yanmei Lei / Yunfei Ma
-    target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/MPQUIC%20use%20cases.pdf
-    date: October 2020
-  Sat-Terr-Multipath:
-    title: Satellite/Terrestrial Multipath Communication 
-    author:
-      - ins: Jörg Deutschmann
-    target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/Satellite-terrestrial%20multipath%20communication.pdf
-    date: October 2020
-  Hybrid-Access-Multipath:
-    title: Hybrid access networks and requirements on MPQUIC
-    author:
-      - ins: Olivier Bonaventure
-    target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/Hybrid%20access%20networks%20and%20requirements%20on%20MPQUIC.pdf
-    date: October 2020
-  Multipath-3GPP-ATSSS:
-    title: Multipath in 3GPP ATSSS
-    author:
-      - ins: Spencer Dawkins / Mirja Kühlewind / Florin Baboescu / Hannu Flinck
-    target: https://github.com/quicwg/wg-materials/blob/master/interim-20-10/Multipath%20in%203GPP%20ATSSS.pdf
-    date: October 2020
+  
+  MASQUE-charter:
+    title: IETF MASQUE Working Group Charter
+    target: https://datatracker.ietf.org/wg/masque/about/
+    date: June 2020
+  
   Elephant-By-Touch:
     target: https://en.wikipedia.org/wiki/Blind_men_and_an_elephant
     title: "Wikipedia Page for Blind men and an elephant"
@@ -151,9 +117,9 @@ Let us turn our attention from "describing an elephant", to "describing what mul
 
 We are not unable to see the parts of QUIC over multiple paths that we have touched, but we can't agree on the shape of multipath for QUIC without understanding what other people are touching.
 
-## Notes for Readers
+## Notes for Readers {#readernotes}
 
-It cannot be emphasized enough that multiple proposals for "QUIC multipath" have been submitted to the IETF (at a minimum, {{I-D.an-multipath-quic}}, {{I-D.deconinck-quic-multipath}}, and {{I-D.huitema-quic-mpath-option}}. In this document, "QUIC multipath" means only "QUIC using multiple paths", and draws from the discussion in the QUIC working group mailing list, some of which has been guided by one or more of the current proposals. 
+It cannot be emphasized enough that multiple proposals for "QUIC multipath" have been submitted to the IETF (at a minimum, {{I-D.deconinck-quic-multipath}}, {{I-D.an-multipath-quic}} and {{I-D.an-multipath-quic-application-policy}}, {{I-D.liu-multipath-quic}}, and {{I-D.huitema-quic-mpath-option}}). In this document, "QUIC multipath" means only "QUIC using multiple paths", and draws from the discussion in the QUIC working group mailing list, some of which has been guided by one or more of the current proposals. 
 
 This document does reuse some terminology from [I-D.dawkins-quic-what-to-do-with-multipath}}, especially "Traffic Switching" and "Traffic Splitting", which are summarized in Section 3.2.
 
@@ -171,11 +137,11 @@ This document is under development in the Github repository at https://github.co
 
 We've had considerable discussion about the details of multipath implementation in QUIC, but it's worth starting out with a couple of metaquestions:
 
-- Do we need multipath in QUIC? (see Section 2.1)
+- Do we need multipath in QUIC? (see {{MQ-Need}})
 
-- Do we already have multipath in QUIC? (see Section 2.2)
+- Do we already have multipath in QUIC? (see {{MQ-Have}})
 
-##  MQ-01 Do We Need Multipath in QUIC? {#MQ-01}
+##  MQ-Need Do We Need Multipath in QUIC? {#MQ-Need}
 
 The most compelling explanation of the point of view that we don't need multipath is likely the {{Chromium-Multipath}} presentation given at {{QUIC-interim-20-10}}.  The short summary of this presentation was that Google had included multipath in planning for their gQUIC implementation, but subsequently stopped working on this, choosing instead to focus on making connection migration work, given that this was what customers were asking for.
 
@@ -183,7 +149,7 @@ As of the date of {{QUIC-interim-20-10}}, few if any implementations were using 
 
 Suggested answer to MQ-01: "Maybe".
 
-##  MQ-02 Do We Already Have Multipath in QUIC? {#MQ-02}
+##  MQ-Have Do We Already Have Multipath in QUIC? {#MQ-Have}
 
 We noted in discussions that {{I-D.ietf-quic-transport}} allows an implementation to open two or more connections on different paths, verify the paths, and even probe to ensure that a path is still valid before migrating from one connection to another.  When an implementation does this proactively, there is no connection establishment delay when the implementation migrates from one path to another.  So it's a reasonable question to ask, "do we already have multipath support in QUIC?"
 
@@ -201,17 +167,17 @@ Once discussion moves beyond the metaquestions in {{MQ}}, questions remain.
 
 Please note that this document only includes high-level questions. There have also been discussions about topics like whether a single sequence number space is shared across paths, etc. These questions aren't included in this document, even though they're important.
 
-##  Q-01 Is There One "Multipath"? {#Q-01}
+##  Q-HowMany Is There One "Multipath"? {#Q-HowMany}
 
-Based on mailing list discussion, the answer is almost certainly "No".  "Multipath" is at best an umbrella term covering a variety of use cases that can make use of multiple paths in a variety of ways, to accomplish a variety of goals.  Some examples are listed in {{Q-06}}.
+Based on mailing list discussion, the answer is almost certainly "No".  "Multipath" is at best an umbrella term covering a variety of use cases that can make use of multiple paths in a variety of ways, to accomplish a variety of goals.  Some examples are listed in {{Q-Goals}}.
 
 If an application can use connections over multiple paths independently from each other, the application could possibly make use of multiple paths, without any "multipath" support in QUIC at all.  But this is highly application-dependent.
 
 We noted that there are many strategies for using multiple paths (some, but certainly not all, described in {{I-D.dawkins-quic-what-to-do-with-multipath}}). It's worth also noting that these strategies may not have much in common with each other.  There are use cases that expect to move from path to path, depending on the relative financial costs of those paths.  Other use cases expect to move from path to path depending on the measured RTT of each path, picking a path with the lowest measured RTT.  Still others may expect to use multiple paths for a single connection, if the measured path characteristics are "sufficiently similar" to each other.
 
-Suggested answer to Q-01: "It's not clear that one multipath scheduler can support all of these use cases".
+Suggested answer to Q-HowMany: "It's not clear that one multipath scheduler can support all of these use cases".
 
-##  Q-02 Do Transport Protocols Need to Support Multipath? {#Q-02}
+##  Q-Transport Do Transport Protocols Need to Support Multipath? {#Q-Transport}
 
 This question seems to revolve around two sub-questions:
 
@@ -223,33 +189,47 @@ From a code reuse perspective, we note that multipath is complicated enough to g
 
 We have been successful when we've included Traffic Switching in transport protocols, but we've only been successful including Traffic Splitting in transport protocols when relevant path characteristics have been similar between various paths, and the use case involved traffic that didn't require the transport to distinguish between different types of application-level information when selecting an appropriate path.  If an application wants to send some types of video frames over one path and other types over a different path, that's not going to be easy to do using a general-purpose transport mechanism.  And while the Internet is more than the World Wide Web, we noted that the World Wide Web has been moving away from bulk transfers for some time, so that user-perceived latency matters much more than bandwidth utilization.
 
-Suggested answer to Q-02: "Maybe.  But it's important to have realistic expectations.  We will likely end up with multiple schedulers, and we may very well end up with applications that can't use any of the schedulers we describe, and have to handle multiple paths on their own".
+Suggested answer to Q-Transport: "Maybe.  But it's important to have realistic expectations.  We will likely end up with multiple schedulers, and we may very well end up with applications that can't use any of the schedulers we describe, and have to handle multiple paths on their own".
 
-##  Q-03 Does Multipath for QUIC Imply Multipath for HTTP/3-QUIC? {#Q-03}
+##  Q-HTTP3 Does Multipath for QUIC Imply Multipath for HTTP/3-QUIC? {#Q-HTTP3}
 
 {{QUIC-charter}} has focused on supporting HTTP since the working group was chartered in 2016.  Although it is certainly possible for applications to use {{I-D.ietf-quic-transport}} as their interface to the QUIC protocol, that's not what most applications we have implementation and deployment experience with have used, and the recent discussions in the MASQUE working group {{MASQUE-charter}} has pointed towards reusing HTTP/3, even for a tunneling and proxying application that may not make much use of HTTP beyond connection set-up.  Some use cases include tunneling, so are reasonable candidates to use HTTP/3 to set up MASQUE tunnels anyway.
 
-Suggested answer to Q-03: "Probably so, especially if the goal is to provide a multipath capability for QUIC without duplicating testing that has already been carried out at scale for HTTP/3".
+Suggested answer to Q-HTTP3: "Probably so, especially if the goal is to provide a multipath capability for QUIC without duplicating testing that has already been carried out at scale for HTTP/3".
 
-## Q-04 What are the Expectations about Reordering? {#Q-04}
+## Q-Symmetric Do Applications Need Symmetric Multipath QUIC? {#Q-Symmetric}
+
+The QUIC transport protocol is so closely tied to HTTP/3 that both {{I-D.ietf-quic-transport}} and {{I-D.ietf-quic-http}} were specified in the same working group ({{QUIC-charter}}), and one result of this close relationship is that QUIC is an asymmetric client-server transport protocol, not a symmetric "host to host" transport protocol. Each connection is initiated by a client endpoint, sending to a server endpoint. 
+
+This is a very reasonable architecture, for a transport protocol targeting use by HTTP, a client-server application protocol, and this fits well into the current Internet architecture, which (for better or worse) includes middleboxes that enforce this directionality. These middleboxes include firewalls that force communications to be initiated from "inside" a network perimeter, which works fine when the goal is to provide clients "inside" access to servers "outside", and Network Address Translators often enforce similar restrictions, so that a packet arriving at the NAT from an unassigned address "inside" the network will be bound to an address "outside" the network, but a packet arriving from an unassigned address "outside" the network will simply be dropped.
+
+If HTTP/3 is the driving use case for QUIC multipath, the client-server nature of the QUIC transport protocol is fine. If the goal is to support other applications, especially bidirectional application protocols, we need to think about this in more detail. 
+
+We noted that QUIC connection migration isn't entirely client-server - a server can send the client a preferred_address transport parameter during the initial handshake. This capability is limited, in that it can only happen once, early in the life of a connection, and the client might not actually migrate to the preferred address. Even if the server does want to migrate the connection, often the client must be the one to initiate that communication because of the previously noted middlebox constraints. 
+
+Suggested answer for Q-Symmetric: "Need a clearer understanding of the applications that will make use of QUIC multipath, in order to know this". 
+
+## Q-Reorder What are the Expectations about Reordering? {#Q-Reorder}
 
 We've had at least two starting ppints for people in these discussions - one that expects traffic to be delivered in-order to applications, and one that expects applications to handle their own out-of-order delivery, since the sending application needs to track what's actually being delivered, including being delivered significantly out of order, in order to select a path more effectively.
 
-For latency-sensitive applications, it's likely that out-of-order delivery across paths is something the application would want to be aware of.  And it's worth noting that we're chatting about the desirability of reliable streams, versus partially reliable streams, versus datagrams, in at least a couple of use cases, and partial reliability isn't part of {{I-D.ietf-quic-datagram}} is underway in the QUIC working group, so if we think partially reliable streams are the right answer, there's still some specification work to do.
+For latency-sensitive applications, it's likely that out-of-order delivery across paths is something the application would want to be aware of.  And it's worth noting that we're chatting about the desirability of reliable streams, versus partially reliable streams, versus datagrams, in at least a couple of use cases, and partial reliability isn't part of streams in {{I-D.ietf-quic-transport}}, so if we think partially reliable streams are the right answer, there's still some specification work to do.
 
-Suggested answer for Q-04: "Answer unclear".
+It's also worth mentioning that repair strategies for reordering across multiple paths may be closer to research than to engineering. Some helpful perspectives are provided in {{I-D.amend-iccrg-multipath-reordering}}. 
 
-## Q-05 How Will We Measure the Benefits and Costs of Multipath? {#Q-05}
+Suggested answer for Q-Reorder: "Answer unclear".
+
+## Q-CB How Will We Measure the Benefits and Costs of Multipath? {#Q-CB}
 
 This has come up most often in private conversations, but I've heard concerns about our ability to measure whether we are making the best use of multiple paths at scale, in a reproduceable way.
 
 It seems obvious that this question is important, and while it may be early in the process to expect a detailed answer, this question is recorded in this document so that we don't lose track of it.
 
-Suggested answer for Q-05: "Please check back later".
+Suggested answer for Q-CB: "Please check back later".
 
-## Q-06 What Are the Goals for using Multiple Paths? {#Q-06}
+## Q-Goals What Are the Goals for using Multiple Paths? {#Q-Goals}
 
-At least one point of view is that different use cases have different goals.  Some goals that have been shared include
+At least one point of view is that different use cases have different goals.  Some goals that were shared in the QUIC multipath virtual interim ((QUIC-interim-20-10}} include
 
 - to migrate from one path to another, possibly because a path has stopped working, or because a "better" path becomes available.
 
@@ -259,21 +239,23 @@ At least one point of view is that different use cases have different goals.  So
 
 -  maximizing reliability of specific traffic, by transmitting the same traffic on multiple paths, either at all times or at specific times, such as "when radio signals are fading".
 
-Other goals almost certainly exist, and contributions describing them in a sentence or two are welcomed.  See {{contrib}} for details.
+Other goals certainly exist, including goals described in {{I-D.an-multipath-quic-application-policy}} and {{I-D.bonaventure-iccrg-schedulers}}, and it's likely that even this set doesn't include all possible strategies. It's also worth noting that few of the presentations given at [QUIC-interim-20-10] shared a common set of even two or three strategies.
 
 Note that actual use cases may be more nuanced about their goals - for instance, sending low-latency traffic over the lowest-latency path, and then using all remaining available bandwidth across all paths for other traffic.
 
-Suggested answer for Q-06: "It depends".
+It will be very helpful if we can look for a small number of simple concepts that would allow a small number of schedulers to meet most application requirements.  The alternative - adding schedulers every time someone thinks of a new strategy - is too painful to contemplate.
 
-## Q-07 What are the API Considerations for Multipath? {#Q-07}
+Suggested answer for Q-Goals: "We sure hope we can narrow the set of goals down to something manageable".
+
+## Q-API What are the API Considerations for Multipath? {#Q-API}
 
 We've noted a number of times that the most useful features of protocols won't be used if there is no way for an application to use them.
 
 HTTP/2 stream priorities {{RFC7540}} was mentioned frequently, but other features were mentioned.
 
-We need a better understanding of the goals (see {{Q-06}} to answer this question, but it's included in this document so we don't forget it.
+We need a better understanding of the goals (see {{Q-Goals}} to answer this question, but it's included in this document so we don't forget it.
 
-Suggested answer for Q-07: "Please check back later".
+Suggested answer for Q-API: "Please check back later".
 
 # IANA Considerations
 
@@ -285,13 +267,17 @@ QUIC-specific security considerations are discussed in Section 21 of {{I-D.ietf-
 
 Section 6 of {{I-D.ietf-quic-datagram}} discusses security considerations specific to the use of the Unreliable Datagram Extension to QUIC.
 
-Some multipath QUIC-specific security considerations can be found in Section 8 of the individual draft {{I-D.deconinck-quic-multipath}}.
+Some multipath QUIC-specific security considerations can be found in Section 8 of the individual draft {{I-D.deconinck-quic-multipath}}. The other QUIC multipath proposals named in {{readernotes}} have "to be determined" security considerations sections, which is not unusual for individual Internet-Drafts. 
 
 # Acknowledgements
 
 I'd like to thank Lars Eggert and Lucas Pardue, the QUIC working group chairs, who called the QUIC virtual interim meeting on multipath.
 
 I'd also like to thank the presenters at the QUIC virtual interim, who put together valuable presentations on short notice.
+
+Mikkel Fahnøe Jørgensen, Lars Eggert, and Mike Bishop provided thoughts about symmetrical multipath QUIC that informed {{Q-Symmetric}}.
+
+Christian Huitema made a plea for sanity about the number of goals for multipath QUIC, that is now included in {{Q-Goals}}.
 
 Many thanks to (your name could easily appear here) for reviews and comments.
 
